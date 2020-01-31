@@ -5,7 +5,6 @@
     client_id: "{{ CLIENT_ID }}"
     secret: "{{ SECRET_ID }}"
     tenant: "{{ TENANT_ID }}"
-    tags: "{{ AZURE_TAGS }}"
   register: result_vm
   ignore_errors: true
 
