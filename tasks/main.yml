@@ -1,0 +1,10 @@
+---
+# tasks file for azure-virtualmachineinfo
+- include_tasks: az-virtualmachineinfo.yml
+- include_tasks: az-networkinterfaceinfo.yml
+# For later merge to one csv
+# - include_tasks: az-networkinterfacelist.yml
+#   loop: 
+#     "{{ result_vm.vms }}"
+# - debug:
+#     var: NIC_LIST

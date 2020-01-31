@@ -1,0 +1,25 @@
+---
+- name: Grab Network Interface Info from Subscription
+  azure_rm_networkinterface_info:
+    subscription_id: "{{ SUBSCRIPTION_ID }}"
+    client_id: "{{ CLIENT_ID }}"
+    secret: "{{ SECRET_ID }}"
+    tenant: "{{ TENANT_ID }}"
+  register: result_nic
+  ignore_errors: true
+
+- name: Initialize Headers (NIC INFO)
+  lineinfile:
+    state: present
+    create: yes
+    path: /home/samarjitbhullar/nicoutput{{ ansible_date_time.date +'T'+ ansible_date_time.time }}.csv
+    line: "NIC Name,Resource Group,Security Group,Virtual Network,Subnet,Location"
+    insertbefore: BOF
+
+- name: Write to file (NIC INFO)
+  lineinfile:
+    state: present
+    create: yes
+    path: /home/samarjitbhullar/nicoutput{{ ansible_date_time.date +'T'+ ansible_date_time.time }}.csv
+    line: "{{ item.name }},{{ item.resource_group }},{{item.security_group}},{{item.virtual_network.name}},{{item.subnet}},{{item.location}}"
+  loop: "{{ result_nic.networkinterfaces }}"

@@ -1,0 +1,8 @@
+---
+- name: Build NIC List (NIC INFO)
+  set_fact: 
+    NIC_LIST: "{{ NIC_LIST }} + ['inner_item']"
+  loop:
+    "{{ item.network_interface_names }}"
+  loop_control:
+    loop_var: inner_item

@@ -1,0 +1,31 @@
+---
+- name: Grab Virtual Machine Info from Subscription
+  azure_rm_virtualmachine_info:
+    subscription_id: "{{ SUBSCRIPTION_ID }}"
+    client_id: "{{ CLIENT_ID }}"
+    secret: "{{ SECRET_ID }}"
+    tenant: "{{ TENANT_ID }}"
+    tags: "{{ AZURE_TAGS }}"
+  register: result_vm
+  ignore_errors: true
+
+# - name: Resource Group List build
+#   set_fact:
+#     RG_LIST: "{{ RG_LIST }} + ['item.resource_group']"
+#   loop: "{{ result_vm.vms }}"
+
+- name: Initialize Headers (Virtual Machines)
+  lineinfile:
+    state: present
+    create: yes
+    path: /home/samarjitbhullar/vmoutput{{ ansible_date_time.date +'T'+ ansible_date_time.time }}.csv
+    line: "VM Name,Resource Group,Status,Network Interface,Location"
+    insertbefore: BOF
+
+- name: Write to file (Virtual Machines)
+  lineinfile:
+    state: present
+    create: yes
+    path: /home/samarjitbhullar/vmoutput{{ ansible_date_time.date +'T'+ ansible_date_time.time }}.csv
+    line: "{{ item.name }},{{ item.resource_group }},{{item.power_state}},{{item.network_interface_names}},{{item.location}}"
+  loop: "{{ result_vm.vms }}"
